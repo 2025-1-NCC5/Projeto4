@@ -6,10 +6,17 @@ Este projeto é um estimador de preços para serviços de transporte, como Uber,
 
 ```
 .
-├── backend/             # API FastAPI
-├── frontend/           # Interface React
-├── ml_model/          # Modelos de Machine Learning
-└── src/               # Dados fonte
+├── Documentos
+    ├── Entrega 1/
+    ├── Entrega 2/
+    ├── Entrega 3/
+    └── Importantes/
+├── Imagens/
+└── src/
+    ├── BackEnd/
+        ├── data/
+        └── src/
+    └── Entregas/
 ```
 
 ## Requisitos
