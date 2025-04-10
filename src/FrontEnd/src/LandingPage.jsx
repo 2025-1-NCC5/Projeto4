@@ -1,91 +1,105 @@
 import React from "react";
 import "./LandingPage.css";
 
-// Animações Lottie
+// Lottie
 import Lottie from "lottie-react";
 import heroAnimation from "./lotties/hero-illustration.json";
 import phoneAnimation from "./lotties/phone-mock.json";
 
+// Importando imagens (SVG)
+import LogoTriap from "./images/logo-triap.svg";
+import MotoristaIcon from "./images/motorista-icon.svg";
+import PassageiroIcon from "./images/passageiro-icon.svg";
+import EmpresaIcon from "./images/empresa-icon.svg";
+import UserIcon from "./images/user-icon.svg";
+
+import Wave1 from "./images/wave-illustration1.svg";
+import Wave2 from "./images/wave-illustration2.svg";
+import Wave3 from "./images/wave-illustration3.svg";
+
+import Grafico1 from "./images/grafico1.svg";
+import Grafico2 from "./images/grafico2.svg";
+import Grafico3 from "./images/grafico3.svg";
+import Graficos from "./images/graficos.svg";
+
+// Removi a imagem "vantagens.svg" conforme solicitado
+
 function LandingPage() {
   return (
     <div className="landing-container">
-
       {/* CABEÇALHO */}
       <header className="landing-header">
         <nav className="navbar">
-          {/* ESQUERDA: logo + nome da marca */}
           <div className="navbar-left">
-            <img src="/images/triap-logo.png" alt="Logo Triap" />
+            <img src={LogoTriap} alt="Logo Triap" />
             <span className="brand-name">TRIAP</span>
           </div>
-
-          {/* MEIO: Menu */}
           <ul className="navbar-menu">
             <li><a href="#home">Home</a></li>
             <li><a href="#viagens">Viagens</a></li>
             <li><a href="#analise">Análise</a></li>
             <li><a href="#conta">Conta</a></li>
           </ul>
-
-          {/* DIREITA: Slogan */}
-          <div className="navbar-slogan">
-            Inteligência que te move.
+          <div className="navbar-slogan">Inteligência que te move.</div>
+          <div className="user-icon-area">
+            <img src={UserIcon} alt="Ícone de usuário" />
           </div>
         </nav>
       </header>
 
       {/* HERO SECTION */}
       <section className="hero-section" id="home">
-        <div className="hero-text">
+        <div className="hero-left">
           <h1>Viajar nunca foi tão inteligente.</h1>
-          <p>Descomplique suas viagens etc...</p>
+          <p>Descubra a rota ideal, com estimativas de preço otimizadas por IA.</p>
+          <p>Para motoristas, passageiros e empresas que querem economizar com eficiência.</p>
           <div className="hero-buttons">
             <button>Simular</button>
-            <button>Saiba Mais</button>
+            <button>Saiba</button>
           </div>
         </div>
-
-        <div className="hero-image">
-          {/* Animação Lottie na Hero */}
+        <div className="hero-right">
           <Lottie
             animationData={heroAnimation}
             loop
             style={{ width: 300, maxWidth: "100%" }}
           />
         </div>
+        <img className="wave-decor wave1" src={Wave1} alt="Onda Decorativa 1" />
       </section>
 
-      {/* INFO SECTION - com Lottie do celular e barras */}
+      {/* INFO SECTION */}
       <section className="info-section info-graphs">
         <div className="info-text">
           <h2>Você informa o trajeto. A Triap informa a melhor decisão.</h2>
           <p>
-            Insira origem, destino e horário. A Triap analisa tudo com IA e te mostra
-            a melhor estimativa de preço.
+            Insira origem, destino e horário. A Triap analisa tudo com IA e te mostra a
+            melhor estimativa de preço.
           </p>
           <p>
             Evite tarifas dinâmicas, planeje melhor seus gastos, viaje com mais confiança.
           </p>
         </div>
-
         <div className="info-image">
-          {/* Renderizando animação Lottie do celular */}
           <div className="lottie-phone">
             <Lottie
               animationData={phoneAnimation}
               loop
-              style={{ width: 300, maxWidth: "100%" }}
+              style={{ width: "100%" }}
             />
-            
-            {/* Barras sobrepostas com valores */}
             <div className="bar bar1">
               <span className="bar-value">107.38</span>
             </div>
             <div className="bar bar2">
               <span className="bar-value">328.07</span>
             </div>
+            <img className="grafico graf1" src={Grafico1} alt="Gráfico 1" />
+            <img className="grafico graf2" src={Grafico2} alt="Gráfico 2" />
+            <img className="grafico graf3" src={Grafico3} alt="Gráfico 3" />
           </div>
+          <img className="big-chart" src={Graficos} alt="Gráfico completo" />
         </div>
+        <img className="wave-decor wave2" src={Wave2} alt="Onda Decorativa 2" />
       </section>
 
       {/* POR QUE ESCOLHER TRIAP? */}
@@ -124,21 +138,22 @@ function LandingPage() {
         <h2>Para quem é ideal?</h2>
         <div className="ideal-cards">
           <div className="ideal-card">
-            <img src="/images/motorista-icon.png" alt="Motoristas" />
+            <img src={MotoristaIcon} alt="Motoristas" />
             <h4>Motoristas</h4>
             <p>Aumente sua renda analisando o melhor momento para rodar.</p>
           </div>
           <div className="ideal-card">
-            <img src="/images/passageiro-icon.png" alt="Passageiros" />
+            <img src={PassageiroIcon} alt="Passageiros" />
             <h4>Passageiros</h4>
             <p>Economize ainda mais suas viagens com a Triap.</p>
           </div>
           <div className="ideal-card">
-            <img src="/images/empresa-icon.png" alt="Empresas" />
+            <img src={EmpresaIcon} alt="Empresas" />
             <h4>Empresas</h4>
             <p>Otimização nos custos internos de transporte corporativo.</p>
           </div>
         </div>
+        <img className="wave-decor wave3" src={Wave3} alt="Onda Decorativa 3" />
       </section>
 
       {/* RESULTADOS */}
@@ -172,7 +187,6 @@ function LandingPage() {
         <p>Termos de Privacidade | Contato</p>
         <p>© Triap 2025</p>
       </footer>
-
     </div>
   );
 }
