@@ -28,45 +28,61 @@ function LandingPage() {
   return (
     <div className="landing-container">
       {/* CABEÇALHO */}
-      <header className="landing-header">
-        <nav className="navbar">
-          <div className="navbar-left">
-            <img src={LogoTriap} alt="Logo Triap" />
-            <span className="brand-name">TRIAP</span>
-          </div>
-          <ul className="navbar-menu">
-            <li><a href="#home">Home</a></li>
-            <li><a href="#viagens">Viagens</a></li>
-            <li><a href="#analise">Análise</a></li>
-            <li><a href="#conta">Conta</a></li>
-          </ul>
-          <div className="navbar-slogan">Inteligência que te move.</div>
-          <div className="user-icon-area">
-            <img src={UserIcon} alt="Ícone de usuário" />
-          </div>
-        </nav>
-      </header>
+    <header className="landing-header">
+      <nav className="navbar">
 
-      {/* HERO SECTION */}
-      <section className="hero-section" id="home">
-        <div className="hero-left">
-          <h1>Viajar nunca foi tão inteligente.</h1>
-          <p>Descubra a rota ideal, com estimativas de preço otimizadas por IA.</p>
-          <p>Para motoristas, passageiros e empresas que querem economizar com eficiência.</p>
-          <div className="hero-buttons">
-            <button>Simular</button>
-            <button>Saiba</button>
-          </div>
+        {/* ESQUERDA: Ícone de usuário + Logo TRIAP */}
+        <div className="navbar-left">
+          <img className="user-icon" src={UserIcon} alt="Ícone de usuário" />
+          <img className="brand-logo" src={LogoTriap} alt="Logo Triap" />
         </div>
-        <div className="hero-right">
-          <Lottie
-            animationData={heroAnimation}
-            loop
-            style={{ width: 300, maxWidth: "100%" }}
-          />
+
+        {/* MEIO: Menu */}
+        <ul className="navbar-menu">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#viagens">Viagens</a></li>
+          <li><a href="#analise">Análise</a></li>
+          <li><a href="#conta">Conta</a></li>
+        </ul>
+
+        {/* DIREITA: Slogan */}
+        <div className="navbar-slogan">
+          Inteligência que te move.
         </div>
-        <img className="wave-decor wave1" src={Wave1} alt="Onda Decorativa 1" />
-      </section>
+
+      </nav>
+    </header>
+
+
+    {/* HERO SECTION */}
+    <section className="hero-section" id="home">
+      <div className="hero-left">
+        <h1>Viajar nunca foi tão inteligente.</h1>
+        <p>Descubra a rota ideal, com estimativas de preço otimizadas por IA.</p>
+        <p>Para motoristas, passageiros e empresas que querem economizar com eficiência.</p>
+
+        <div className="hero-buttons">
+          <button>Simular</button>
+          <button>Saiba</button>
+        </div>
+      </div>
+
+      <div className="hero-right">
+        {/* Animação JSON (heroAnimation) do Figma */}
+        <Lottie
+          animationData={heroAnimation}
+          loop
+          style={{ width: 400, maxWidth: "100%" }}        />
+      </div>
+
+      {/* Forma ondulada (wave-lime) - Ajuste o caminho se estiver em outro local */}
+      <img
+        className="hero-wave"
+        src={Wave3}
+        alt="Forma Ondulada"
+      />
+    </section>
+
 
       {/* INFO SECTION */}
       <section className="info-section info-graphs">
@@ -153,7 +169,7 @@ function LandingPage() {
             <p>Otimização nos custos internos de transporte corporativo.</p>
           </div>
         </div>
-        <img className="wave-decor wave3" src={Wave3} alt="Onda Decorativa 3" />
+        <img className="wave-decor wave1" src={Wave1} alt="Onda Decorativa 3" />
       </section>
 
       {/* RESULTADOS */}

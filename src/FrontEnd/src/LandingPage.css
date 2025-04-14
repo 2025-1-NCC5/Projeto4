@@ -4,7 +4,8 @@ html, body {
   padding: 0;
   width: 100%;
   min-height: 100%;
-  font-family: Arial, sans-serif;
+  /* Usando SF Pro se estiver instalado, com fallback para outras fontes */
+  font-family: "SF Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   box-sizing: border-box;
 }
 *, *::before, *::after {
@@ -21,82 +22,96 @@ html, body {
 /* -------------------------------------
    CABEÇALHO / NAVBAR
 ------------------------------------- */
+/* Cabeçalho */
 .landing-header {
   width: 100%;
-  background-color: #fff;
+  background-color: #fff; /* Ou se no Figma for azul-claro #B4C6D3, troque aqui */
 }
+
+/* Barra principal */
 .navbar {
   display: flex;
   align-items: center;
   padding: 1rem 2rem;
+  /* Se quiser cor de fundo específica do Figma:
+     background-color: #B4C6D3; 
+  */
 }
+
+/* ESQUERDA: Ícone + Logo */
 .navbar-left {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 1rem; /* espaço entre o ícone de usuário e o logo */
 }
-.navbar-left img {
-  height: 40px;
+.user-icon {
+  width: 36px; 
+  height: 36px; 
+  /* ou 30px, 28px... o valor que desejar */
 }
-.brand-name {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #333;
+
+.brand-logo {
+  width: auto;   /* Mantém a proporção original */
+  height: 30px;  /* Ajuste para o tamanho desejado */
 }
+
+/* MENU no meio */
 .navbar-menu {
   list-style: none;
   display: flex;
   gap: 1.5rem;
   margin: 0;
   padding: 0;
-  flex: 1;
-  justify-content: center;
+  flex: 1; /* Para “empurrar” o slogan à direita */
+  justify-content: center; /* Centralizar */
 }
 .navbar-menu li a {
   text-decoration: none;
-  color: #333;
+  color: #2D5E72; /* Azul escuro */
   font-weight: 500;
+  font-size: 1rem; /* Ajuste conforme seu Figma */
 }
+
+/* DIREITA: Slogan */
 .navbar-slogan {
-  margin-left: auto;
-  color: #f0a500;
+  color: #D4E272;  /* Verde-limão */
   font-weight: 600;
+  font-size: 1rem;
+  margin-left: auto; /* Força a ida ao extremo direito */
 }
+
 .user-icon-area img {
   height: 30px;
   margin-left: 1rem;
 }
 
-/* -------------------------------------
-   HERO SECTION
-------------------------------------- */
 .hero-section {
   width: 100%;
-  min-height: 70vh;
-  background-color: #f9f9f9;
-  display: flex;
+  min-height: 70vh;  /* Ajuste para o tamanho desejado */
+  display: flex;     /* Texto e animação lado a lado */
   align-items: center;
   justify-content: space-between;
-  position: relative;
-  padding: 2rem 10%;
-  box-sizing: border-box;
+  position: relative;  /* Necessário p/ posicionar wave absoluta */
+  padding: 3rem 10%;   /* Espaçamento horizontal e vertical */
+  background-color: #fff;  /* Caso seu Figma tenha fundo branco */
 }
+
+/* Texto à esquerda */
 .hero-left {
   flex: 1;
-  max-width: 50%;
-  position: relative;
-  z-index: 2;
+  max-width: 50%; /* O texto ocupa ~metade */
+  z-index: 2;     /* Fica acima da forma ondulada */
 }
 .hero-left h1 {
-  font-size: 3rem;
+  font-size: 3rem;       /* Ajuste conforme Figma */
   margin-bottom: 1rem;
   color: #333;
 }
 .hero-left p {
   font-size: 1.1rem;
-  line-height: 1.4;
-  margin-bottom: 1rem;
   color: #555;
+  margin-bottom: 1rem;
+  line-height: 1.4;
 }
 .hero-buttons button {
   margin-right: 10px;
@@ -104,33 +119,32 @@ html, body {
   font-size: 1rem;
   border: none;
   cursor: pointer;
-  background-color: #c3ff00;
+  background-color: #c3ff00; /* Exemplo de verde-limão do Figma */
   color: #000;
   border-radius: 5px;
 }
 .hero-buttons button:nth-child(2) {
-  background-color: #eee;
+  background-color: #eee; /* Botão secundário */
 }
+
+/* Ilustração / animação à direita */
 .hero-right {
   flex: 1;
   max-width: 45%;
+  z-index: 2;   /* Acima da wave */
   text-align: center;
-  position: relative;
-  z-index: 2;
 }
-.hero-right img {
-  max-width: 100%;
-  height: auto;
-}
-/* Onda decorativa no Hero */
+
 .hero-wave {
   position: absolute;
-  top: -50px;
-  left: -80px;
+  top: -100px; /* Aumente ou diminua conforme necessário para que a onda chegue até o header */
+  right: 0;
   width: 500px;
-  z-index: 1;
-  opacity: 0.7;
+  z-index: 0; /* Certifique-se que fique atrás do conteúdo do header e hero */
+  opacity: 0.9;
 }
+
+
 
 /* -------------------------------------
    INFO SECTION (animação do celular, barras, gráficos)
@@ -363,3 +377,12 @@ html, body {
 .landing-footer p {
   margin: 0.3rem 0;
 }
+
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('./fonts/SFProDisplay-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+
