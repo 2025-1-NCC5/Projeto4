@@ -3,6 +3,13 @@ const cors = require('cors');
 const routes = require('./routes');
 require('dotenv').config();
 
+// Opcional: Verifica se auth.js foi carregado corretamente
+try {
+  require('./auth');
+} catch (err) {
+  console.error("Erro ao carregar auth.js:", err);
+}
+
 const app = express();
 
 // Middleware

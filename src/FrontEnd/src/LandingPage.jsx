@@ -1,5 +1,6 @@
 import React from "react";
 import "./LandingPage.css";
+import { useNavigate } from "react-router-dom";
 
 // Lottie
 import Lottie from "lottie-react";
@@ -25,6 +26,8 @@ import Graficos from "./images/graficos.svg";
 // Removi a imagem "vantagens.svg" conforme solicitado
 
 function LandingPage() {
+  const navigate = useNavigate();
+
   return (
     <div className="landing-container">
       {/* CABEÇALHO */}
@@ -62,8 +65,8 @@ function LandingPage() {
         <p>Para motoristas, passageiros e empresas que querem economizar com eficiência.</p>
 
         <div className="hero-buttons">
-          <button>Simular</button>
-          <button>Saiba</button>
+          <button onClick={() => navigate("/login")}>Simular</button>
+          <button onClick={() => navigate("/login")}>Saiba</button>
         </div>
       </div>
 
@@ -193,7 +196,9 @@ function LandingPage() {
 
       {/* CTA FINAL */}
       <section className="cta-section" id="conta">
-        <button className="cta-button">Simular minha corrida</button>
+        <button className="cta-button" onClick={() => navigate("/login")}>
+          Simular minha corrida
+        </button>
       </section>
 
       {/* RODAPÉ */}

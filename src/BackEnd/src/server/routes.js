@@ -16,7 +16,7 @@ router.post('/register', [
 ], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        return res.status(400).json({ error: errors.array()[0]?.msg || "Dados inválidos" });
     }
 
     const { UserName, UserEmail, UserCellphone, UserPassword, UserFavoriteApp, UserIs } = req.body;
@@ -44,7 +44,7 @@ router.post('/login', [
 ], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        return res.status(400).json({ error: errors.array()[0]?.msg || "Dados inválidos" });
     }
 
     const { UserEmail, UserPassword } = req.body;
@@ -61,10 +61,11 @@ router.post('/login', [
         return res.status(401).json({ error: 'Usuário ou senha inválidos' });
     }
 
-    // Gera o token JWT
-    const token = generateToken(user);
+    // Gera o token JWT (opcional)
+    // const token = generateToken(user);
 
-    res.json({ message: 'Login realizado com sucesso!', token });
+    res.json({ message: 'Login realizado com sucesso!' });
 });
 
+// Não adicione nada abaixo sem função handler!
 module.exports = router;
