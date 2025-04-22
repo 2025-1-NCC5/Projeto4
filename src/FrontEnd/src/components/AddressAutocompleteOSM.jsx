@@ -32,19 +32,6 @@ export default function AddressAutocompleteOSM({ label, placeholder, onSelect })
         if (!res.ok) throw new Error('API error');
         const data = await res.json();
 
-<<<<<<< Updated upstream
-        // Mapear rua + número, bairro e cidade
-        const formatted = data.map(item => {
-          const addr = item.address;
-          const road = addr.road || addr.pedestrian || addr.footway || '';
-          const number = addr.house_number || '';                 // pega o número da rua
-          const streetWithNumber = number
-            ? `${road}, ${number}`
-            : road;
-          const suburb = addr.suburb || addr.neighbourhood || '';
-          const city = addr.city || addr.town || addr1.village || '';
-          const parts = [streetWithNumber, suburb, city].filter(Boolean);
-=======
         const formatted = data.map(item => {
           const addr = item.address;
           const road = addr.road || addr.pedestrian || addr.footway || '';
@@ -59,7 +46,6 @@ export default function AddressAutocompleteOSM({ label, placeholder, onSelect })
           const rest = [suburb, city].filter(Boolean).join(', ');
           const label = rest ? `${streetPart} – ${rest}` : streetPart;
 
->>>>>>> Stashed changes
           return {
             label,
             lat: item.lat,
