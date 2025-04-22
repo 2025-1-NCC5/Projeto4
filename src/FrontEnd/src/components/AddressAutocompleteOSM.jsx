@@ -32,17 +32,17 @@ export default function AddressAutocompleteOSM({ label, placeholder, onSelect })
         if (!res.ok) throw new Error('Erro na API');
         const data = await res.json();
 
-        // Mapear somente rua, bairro e cidade
+        // Mapear rua + número, bairro e cidade
         const formatted = data.map(item => {
           const addr = item.address;
-          // rua
           const road = addr.road || addr.pedestrian || addr.footway || '';
-          // bairro (suburb ou neighbourhood)
+          const number = addr.house_number || '';                 // pega o número da rua
+          const streetWithNumber = number
+            ? `${road}, ${number}`
+            : road;
           const suburb = addr.suburb || addr.neighbourhood || '';
-          // cidade (city, town ou village)
-          const city = addr.city || addr.town || addr.village || '';
-          // monta label
-          const parts = [road, suburb, city].filter(Boolean);
+          const city = addr.city || addr.town || addr1.village || '';
+          const parts = [streetWithNumber, suburb, city].filter(Boolean);
           return {
             label: parts.join(', '),
             lat: item.lat,
