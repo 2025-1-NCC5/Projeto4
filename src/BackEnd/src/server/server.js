@@ -6,7 +6,8 @@ const routes = require('./routes');
 // Carrega as variáveis de ambiente do arquivo .env localizado NA MESMA PASTA que server.js
 // require('dotenv').config({ path: path.resolve(__dirname, './.env') });
 // OU, mais simples se o CWD for sempre o esperado (geralmente funciona):
-require('dotenv').config({ path: 'C:/Projetos/Projeto4/src/BackEnd/src/server/.env' });
+const path = require('path'); // Importa o módulo 'path' do Node.js
+require('dotenv').config({ path: path.resolve(__dirname, '.env') });
 
 // Opcional: Verifica se auth.js foi carregado corretamente
 try {

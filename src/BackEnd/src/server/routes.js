@@ -5,6 +5,8 @@ const db = require('./db');
 const { hashPassword, comparePassword, generateToken } = require('./auth');
 const router = express.Router();
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 // Cache simples para feriados (evita chamar a API repetidamente para o mesmo ano)
 const holidayCache = {}
 
