@@ -67,5 +67,28 @@ router.post('/login', [
     res.json({ message: 'Login realizado com sucesso!' });
 });
 
+const fs = require("fs");
+const path = require("path");
+
+// Endpoint para retornar o preço previsto do Python
+router.get("/preco", (req, res) => {
+    const filePath = path.join(__dirname, "data", "dadosteste.json");
+    fs.readFile(filePath, "utf8", (err, data) => {
+        if (err) {
+            console.error("Erro ao ler JSON:", err);
+            return res.status(500).json({ error: "Erro ao obter o preço previsto" });
+        }
+
+        try {
+            const json = JSON.parse(data);
+            res.json(json);
+        } catch (parseError) {
+            console.error("Erro ao parsear JSON:", parseError);
+            res.status(500).json({ error: "Erro ao interpretar o JSON do Python" });
+        }
+    });
+});
+
+
 // Não adicione nada abaixo sem função handler!
 module.exports = router;

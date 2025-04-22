@@ -1,9 +1,8 @@
-export async function fetchWithAuth(url, options = {}) {
-  const token = sessionStorage.getItem("token");
-  const headers = {
-    ...options.headers,
-    Authorization: `Bearer ${token}`,
-  };
-  const response = await fetch(url, { ...options, headers });
-  return response;
+const BASE_URL = "http://localhost:3000/api";
+
+export async function getPrecoPrevisto() {
+  const res = await fetch(`${BASE_URL}/preco`);
+  const data = await res.json();
+  return data;
 }
+

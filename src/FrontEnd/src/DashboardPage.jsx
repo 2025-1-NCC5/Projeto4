@@ -2,19 +2,31 @@ import React, { useState } from "react";
 import "./DashboardPage.css";
 import AddressAutocompleteOSM from "./components/AddressAutocompleteOSM";
 
+// Função para chamar a API Node.js
+const getPrecoPrevisto = async () => {
+  const res = await fetch("http://localhost:3000/api/preco");
+  const data = await res.json();
+  return data.preco_previsto;
+};
+
 export default function DashboardPage() {
   const [origin, setOrigin] = useState(null);
   const [destination, setDestination] = useState(null);
   const [price, setPrice] = useState("");
 
-  const handleSimulate = () => {
+  const handleSimulate = async () => {
     if (!origin || !destination) {
       setPrice("Preencha ambos os campos");
       return;
     }
-    // Simulação de preço
-    const simulated = (Math.random() * 95 + 5).toFixed(2);
-    setPrice(`R$ ${simulated}`);
+
+    try {
+      const preco = await getPrecoPrevisto();
+      setPrice(`R$ ${preco.toFixed(2)}`);
+    } catch (error) {
+      console.error("Erro ao buscar o preço:", error);
+      setPrice("Erro ao buscar o preço");
+    }
   };
 
   return (
