@@ -19,31 +19,34 @@ async function comparePassword(plainPassword, hashedPassword) {
 // 3) Gera um JWT contendo UserId e UserEmail
 function generateToken(user) {
   const payload = {
-    id:    user.UserId,
+    id: user.UserId, // <<< Usa UserId do banco
     email: user.UserEmail
+    // Adicione outros dados se quiser (nome, tipo, etc.)
   };
-  // opcional: você pode incluir aqui outras propriedades no payload
+  // Adiciona expiracao
   return jwt.sign(payload, SECRET_KEY, { expiresIn: '2h' });
 }
 
 // 4) Middleware para proteger rotas
 function verifyToken(req, res, next) {
   const authHeader = req.headers.authorization;
-  if (!authHeader) {
-    return res.status(401).json({ error: 'Token não fornecido' });
+  if (!authHeader || !authHeader.startsWith('Bearer ')) { // Verifica Bearer
+    return res.status(401).json({ error: 'Token nao fornecido ou mal formatado' });
   }
-
-  const [scheme, token] = authHeader.split(' ');
-  if (scheme !== 'Bearer' || !token) {
-    return res.status(401).json({ error: 'Formato de token inválido' });
+  const token = authHeader.split(' ')[1];
+  if (!token) {
+    return res.status(401).json({ error: 'Token ausente apos Bearer' });
   }
-
   try {
     const decoded = jwt.verify(token, SECRET_KEY);
-    req.user = decoded; // { id, email, iat, exp }
+    req.user = decoded; // req.user tera { id, email, iat, exp }
     next();
   } catch (err) {
-    return res.status(401).json({ error: 'Token inválido ou expirado' });
+    if (err.name === 'TokenExpiredError') {
+        return res.status(401).json({ error: 'Token expirado' });
+    }
+    console.error("Erro ao verificar token:", err.message); // Log do erro real
+    return res.status(401).json({ error: 'Token invalido' });
   }
 }
 

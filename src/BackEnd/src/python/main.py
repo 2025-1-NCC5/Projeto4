@@ -3,6 +3,7 @@ from fastapi import FastAPI, HTTPException # Importa HTTPException
 from pydantic import BaseModel, Field # Importa Field para nomes com hifen/underline
 import numpy as np
 import pickle
+import time
 # Nao precisa mais de 'holidays' aqui
 
 # Carrega modelo serializado
@@ -39,51 +40,55 @@ class PredictRequest(BaseModel):
 app = FastAPI()
 
 @app.post("/predict")
-def predict(req: PredictRequest):
+async def predict(req: PredictRequest): # <<< Tornar async se o modelo for muito lento
     if model is None or not expected_features:
          raise HTTPException(status_code=500, detail="Modelo nao carregado corretamente.")
 
-    try:
-        # Cria o array numpy na ORDEM CORRETA definida em expected_features
-        input_list = []
-        # Converte o Pydantic model para um dicionario para acesso facil
-        req_dict = req.dict(by_alias=True) # Usa by_alias=True se usou alias acima
+    print("INFO: Requisicao recebida em /predict") # Log inicial
 
+    try:
+        req_dict = req.dict(by_alias=True)
+        print(f"DEBUG: Payload recebido do Node: {req_dict}") # Log do payload
+
+        input_list = []
         for feature_name in expected_features:
             if feature_name in req_dict:
                 input_list.append(req_dict[feature_name])
             else:
-                # Se alguma feature esperada pelo modelo nao veio do Node, da erro
-                print(f"Erro: Feature esperada '{feature_name}' ausente no payload recebido.")
+                print(f"ERRO: Feature esperada '{feature_name}' ausente.")
                 raise HTTPException(status_code=422, detail=f"Feature ausente: {feature_name}")
 
-        vals = np.array([input_list]) # Cria [[val1, val2, ...]]
+        vals = np.array([input_list])
+        print(f"DEBUG: Array numpy para o modelo: {vals}") # Log do array
 
-        # Verifica se o numero de features bate
         if vals.shape[1] != len(expected_features):
-             print(f"Erro: Numero de features recebidas ({vals.shape[1]}) diferente do esperado ({len(expected_features)}).")
+             print(f"ERRO: Discrepancia no numero de features: esperado {len(expected_features)}, recebido {vals.shape[1]}.")
              raise HTTPException(status_code=422, detail="Numero incorreto de features.")
 
-        # Faz a predicao
+        # --- Chamada do Modelo ---
+        print("INFO: Chamando model.predict()...")
+        start_time = time.time() # Medir tempo
+        # Se model.predict for sincrono (normal para scikit-learn/xgboost):
         prediction = model.predict(vals)
+        # Se fosse uma operacao I/O-bound ou muito longa, poderiamos usar asyncio:
+        # prediction = await asyncio.to_thread(model.predict, vals)
+        end_time = time.time()
+        print(f"INFO: model.predict() concluido em {end_time - start_time:.4f} segundos.")
+        # -------------------------
 
-        # Verifica se a predicao e valida
+
         if prediction is None or len(prediction) == 0 or not np.isfinite(prediction[0]):
-             print(f"Erro: Predicao retornou valor invalido: {prediction}")
+             print(f"ERRO: Predicao retornou valor invalido: {prediction}")
              raise HTTPException(status_code=500, detail="Modelo retornou predicao invalida.")
 
         price = float(prediction[0])
-        print(f"Payload recebido: {req_dict}")
-        print(f"Array para predict: {vals}")
-        print(f"Preco previsto: {price}")
+        print(f"INFO: Preco previsto: {price}")
         return {"price": price}
 
     except HTTPException as http_exc:
-         # Re-lanca excecoes HTTP ja tratadas
          raise http_exc
     except Exception as e:
-         print(f"Erro inesperado durante a predicao: {type(e).__name__} - {e}")
-         # Logar o traceback completo pode ser util aqui
-         # import traceback
-         # traceback.print_exc()
-         raise HTTPException(status_code=500, detail="Erro interno ao processar a predicao.")
+         print(f"ERRO: Erro inesperado durante a predicao: {type(e).__name__} - {e}")
+         import traceback
+         traceback.print_exc() # Imprime o traceback completo no console do Python
+         raise HTTPException(status_code=500, detail=f"Erro interno no servico ML: {type(e).__name__}")
