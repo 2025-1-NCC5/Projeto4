@@ -12,6 +12,7 @@ const routes = require('./routes');
 if (!process.env.ORS_API_KEY) { /* ... aviso ... */ }
 if (!process.env.ML_SERVICE_URL) { /* ... aviso ... */ }
 if (!process.env.JWT_SECRET) { /* ... aviso ... */ }
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
 const app = express();
 

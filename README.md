@@ -42,7 +42,7 @@ npm run dev
 ```sh
 cd src/BackEnd/src/python
 pip install fastapi uvicorn pydantic numpy scikit-learn
-python -m uvicorn main:app --reload
+python -m uvicorn main:app --host 0.0.0.0 --port 5000 --reload
 ```
 
 ---
