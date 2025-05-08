@@ -4,75 +4,51 @@ Este projeto é um estimador de preços para serviços de transporte, como Uber,
 
 ## Estrutura do Projeto
 
-```
-.
-├── Documentos
-    ├── Entrega 1/
-    ├── Entrega 2/
-    ├── Entrega 3/
-    └── Importantes/
-├── Imagens/
-└── src/
-    ├── BackEnd/
-        ├── data/
-        └── src/
-    └── Entregas/
-```
-
-## Requisitos
-
-- Python 3.8+
-- Node.js 14+
-- NPM 6+
-
-## Instalação
-
-### Backend
-
-1. Crie um ambiente virtual Python:
-```bash
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-venv\Scripts\activate     # Windows
+```sh
+.├── Documentos
+     ├── Entrega 1/
+     ├── Entrega 2/
+     ├── Entrega 3/
+     └── Importantes/ # modelos, fotos e tabelas
+ ├── Imagens/
+ └── src/
+     ├── FrontEnd/ # front e seus módulos
+     ├── BackEnd/ # backend e seus módulos
+         └── src/
+             ├── python/ # modelo de IA
+             └── server/ # RestAPI
 ```
 
-2. Instale as dependências:
-```bash
-cd backend
-pip install -r requirements.txt
-```
+## Ambiente de dev
 
-### Frontend
+### Configurar e rodar FrontEnd
 
-1. Instale as dependências:
-```bash
-cd frontend
+```sh
+cd src/FrontEnd
 npm install
+npm run dev
 ```
 
-### Modelo de Machine Learning
+### Configurar e rodar Servidor
 
-1. Treine os modelos:
-```bash
-cd ml_model
-python src/train.py
+```sh
+cd src/BackEnd
+npm install
+npm run dev
 ```
 
-## Executando o Projeto
+### Configurar e rodar modelo de IA
 
-1. Inicie o backend:
-```bash
-cd backend
-uvicorn app.main:app --reload
+```sh
+cd src/BackEnd/src/python
+pip install fastapi uvicorn pydantic numpy scikit-learn
+python -m uvicorn main:app --reload
 ```
 
-2. Inicie o frontend:
-```bash
-cd frontend
-npm start
-```
+---
 
-3. Acesse a aplicação em `http://localhost:3000`
+Acessar o FrontEnd via [localhost](http://localhost:5173/)
+
 
 ## Funcionalidades
 
@@ -83,6 +59,6 @@ npm start
 
 ## Tecnologias Utilizadas
 
-- Backend: FastAPI, SQLAlchemy, Pandas, Scikit-learn
-- Frontend: React, Material-UI, TypeScript
-- ML: Scikit-learn, Pandas, NumPy
+- Backend: NodeJS, SQLite
+- Frontend: React, JavaScript
+- ML: Python com scikit-learn
