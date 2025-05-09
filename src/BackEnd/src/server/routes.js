@@ -271,7 +271,21 @@ router.get('/user-profile', verifyToken, (req, res) => {
       }
   
       console.log("--- Rota /api/simulate concluida ---");
-      return res.json({ price }); // <<< Retorna o JSON com o preco
+      // Converte distância em km (1 casa decimal)
+      const distancia_km = Math.round((distance_m / 1000) * 10) / 10;
+
+      // Converte tempo estimado em string legível
+      let duracao_str = '';
+      const minutos = Math.round(duration_s / 60);
+      if (minutos < 60) {
+        duracao_str = `${minutos} min`;
+      } else {
+        const h = Math.floor(minutos / 60);
+        const m = minutos % 60;
+        duracao_str = `${h}h${m.toString().padStart(2, '0')}`;
+      }
+
+      return res.json({ price, distancia_km, duracao_str });
   
     } catch (err) {
       // Captura erros gerais lancados nos blocos try
