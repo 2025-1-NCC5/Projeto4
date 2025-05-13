@@ -1,0 +1,51 @@
+product_id
+UberX              235734
+pop99              234073
+regular-taxi       215867
+turbo-taxi         199214
+Comfort            192982
+Flash              130530
+Black              123677
+poupa99            115676
+Uber Promo         104139
+Flash Moto          95879
+Bag                 73275
+UberFlash           56329
+Black Bag           36641
+Uber Flash          30581
+top99               28122
+Moto                25731
+Taxi                19629
+Flash Bikes         19231
+UberX Promo         15013
+Comfort Planet       9700
+PTaxi                8148
+comfort99            7887
+WPP-42-1             4579
+WPP-1-1              4575
+Uber Planet          3944
+WPP-7-6              3211
+delivery99           2791
+WPP-5-5              1304
+Original              920
+Prioridade            588
+Moto Flash             22
+delivery-moto99         5
+UberX Priority          2
+moto99                  1
+
+-----
+
+UberX              235734 - UberX
+Comfort            192982 - Uber Confort
+Black              123677 - Uber Black
+Uber Promo         104139 - Uber com promo
+Bag                 73275 - Uber bag
+Black Bag           36641 - Uber black bag
+
+pop99              234073 - 99pop
+comfort99            7887 - 99 confort
+poupa99            115676 - 99 com promo
+
+regular-taxi       215867 - Taxi
+turbo-taxi         199214 - turbo Taxi
