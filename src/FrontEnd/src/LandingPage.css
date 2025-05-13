@@ -1,198 +1,190 @@
-/* ========== RESET / BASE ========== */
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  min-height: 100%;
-  font-family: "SF Pro", -apple-system, BlinkMacSystemFont, "Segoe UI",
-               Roboto, Helvetica, Arial, sans-serif;
-  box-sizing: border-box;
+/* ===================== RESET / BASE ===================== */
+html, body{
+  margin:0; padding:0; width:100%; min-height:100%;
+  font-family:"SF Pro",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  box-sizing:border-box;
 }
-*, *::before, *::after { box-sizing: inherit; }
+*,*::before,*::after{box-sizing:inherit;}
 
-/* ========== CONTAINER PRINCIPAL ========== */
-.landing-container { width: 100%; overflow-x: hidden; }
+.landing-container{width:100%; overflow-x:hidden;}
 
-/* ========== CABEÇALHO / NAVBAR ========== */
-.landing-header {
-  width: 100%;
-  background-color: #fff;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-  position: sticky; top: 0; z-index: 100;
+/* ===================== NAVBAR ===================== */
+.landing-header{
+  background:#fff; box-shadow:0 1px 4px rgba(0,0,0,.08);
+  position:sticky; top:0; z-index:100;
 }
-.navbar {
-  max-width: 1200px; margin: 0 auto;
-  display: flex; align-items: center;
-  padding: 1rem 2rem;
+.navbar{
+  max-width:1200px; margin:0 auto; padding:1rem 2rem;
+  display:flex; align-items:center;
 }
-.navbar-left { display: flex; align-items: center; gap: 1rem; }
-.user-icon { width: 36px; height: 36px; }
-.brand-logo { height: 30px; }
-.navbar-menu {
-  flex: 1; display: flex; justify-content: center; gap: 1.5rem;
-  list-style: none; margin: 0; padding: 0;
+.navbar-left{display:flex; align-items:center; gap:1rem;}
+.user-icon{width:36px; height:36px;}
+.brand-logo{height:30px;}
+.navbar-menu{
+  flex:1; display:flex; justify-content:center; gap:1.5rem;
+  list-style:none; margin:0; padding:0;
 }
-.navbar-menu li a {
-  text-decoration: none; color: #2D5E72;
-  font-weight: 500; font-size: 1rem; transition: color 0.2s;
+.navbar-menu a{
+  text-decoration:none; color:#2D5E72; font-weight:500;
+  transition:color .2s;
 }
-.navbar-menu li a:hover { color: #0077CC; }
-.navbar-slogan { margin-left: auto; color: #D4E272; font-weight: 600; }
+.navbar-menu a:hover{color:#0077CC;}
+.navbar-slogan{margin-left:auto; color:#D4E272; font-weight:600;}
 
-/* ========== HERO SECTION ========== */
+/* ===================== HERO ===================== */
 .hero-section{
-  width:100%; min-height:70vh; display:flex; align-items:center;
-  justify-content:space-between; padding:3rem 10%; position:relative;
-  background-color:#fff;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:3rem 10%; min-height:70vh; position:relative; background:#fff;
+  overflow:hidden;                /* recorta a parte que sai da tela */
 }
 .hero-left{flex:1; max-width:50%; z-index:2;}
 .hero-left h1{font-size:3rem; color:#333; margin-bottom:1rem;}
 .hero-left p{font-size:1.1rem; color:#555; line-height:1.4; margin-bottom:1rem;}
 .hero-buttons{display:flex; gap:1rem; margin-top:1.5rem;}
 .hero-buttons button{
-  padding:.8rem 1.5rem; font-size:1rem; border:none; border-radius:5px;
-  cursor:pointer; transition:background-color .2s;
+  padding:.8rem 1.5rem; border:none; border-radius:5px; font-size:1rem;
+  cursor:pointer; transition:background .2s;
 }
 .hero-buttons button:first-child{background:#c3ff00; color:#000;}
 .hero-buttons button:nth-child(2){background:#eee; color:#666;}
 .hero-right{flex:1; max-width:45%; text-align:center; z-index:2;}
-.hero-wave{position:absolute; top:-100px; right:0; width:500px; opacity:.9; z-index:0;}
 
-/* ========== INFO SECTION (Análise / Gráficos) ========== */
-.info-section.info-graphs{
-  display:flex; align-items:center; justify-content:space-between;
-  background:#E6F9FF; padding:4rem 8%; position:relative; overflow:hidden;
+/* onda verde do hero: agora cobre todo o topo */
+.hero-wave{
+  position:absolute;
+  top:-260px;            /* sobe até ultrapassar a navbar */
+  right:-90px;           /* puxa um pouco para fora */
+  width:65vw;            /* 65 % da viewport */
+  max-width:1100px;      /* limite superior */
+  min-width:500px;       /* limite inferior p/ não encolher demais */
+  opacity:.85;
+  pointer-events:none;
 }
 
-/* --- Texto --- */
+/* telas menores: wave cobre praticamente toda a direita */
+@media(max-width:768px){
+  .hero-wave{
+    top:-80px;
+    right:-60px;
+    width:120%;
+  }
+}
+
+/* ===================== INFO (CELULAR + BARRAS) ===================== */
+.info-section.info-graphs{
+  background:#E6F9FF; padding:4rem 8%;
+  display:flex; align-items:center; justify-content:space-between;
+  position:relative; overflow:hidden;
+}
 .info-section.info-graphs .info-text{
   flex:1; max-width:480px; z-index:3;
 }
-.info-section.info-graphs .info-text h2{
-  font-size:2rem; color:#004D66; margin-bottom:1rem;
-}
-.info-section.info-graphs .info-text p{
-  font-size:1rem; color:#333; line-height:1.5; margin-bottom:1rem;
-}
-
-/* --- Bloco de imagens (celular + barras) --- */
+.info-section.info-graphs .info-text h2{font-size:2rem; color:#004D66; margin-bottom:1rem;}
+.info-section.info-graphs .info-text p{font-size:1rem; color:#333; line-height:1.5; margin-bottom:1rem;}
 .info-section.info-graphs .info-image{
   flex:1; max-width:420px;
-  display:flex; align-items:flex-end; justify-content:center;
-  gap:2rem;       /* espaço entre celular e gráfico de barras */
+  display:flex; align-items:flex-end; justify-content:center; gap:2rem;
   position:relative; z-index:2;
 }
+.lottie-phone{width:260px; position:relative; flex-shrink:0; z-index:2;}
+.lottie-phone .bar,
+.info-section.info-graphs .grafico{display:none!important;}  /* ocultamos balões e minigráficos */
+.big-chart{width:160px; flex-shrink:0; margin-bottom:10px; z-index:1;}
+.wave-decor.wave2{position:absolute; bottom:-20px; left:-10%; width:140%; opacity:.4; z-index:0;}
 
-/* Celular */
-.info-section.info-graphs .lottie-phone{
-  width:260px; position:relative; flex-shrink:0; z-index:2;
-}
-.info-section.info-graphs .bar{
-  position:absolute; background:#fff; padding:.4rem .6rem;
-  border-radius:4px; font-weight:bold;
-  box-shadow:0 2px 6px rgba(0,0,0,0.15);
-}
-.info-section.info-graphs .bar1{top:40%; left:40%; transform:translate(-50%,-50%);}
-.info-section.info-graphs .bar2{top:70%; left:50%; transform:translate(-50%,-50%);}
-
-/* Mini-gráficos sobre o celular (se quiser ocultar, use display:none) */
-.info-section.info-graphs .grafico{position:absolute; width:50px; z-index:3;}
-.info-section.info-graphs .graf1{top:20%; left:70%; transform:translate(-50%,-50%);}
-.info-section.info-graphs .graf2{top:50%; left:80%; transform:translate(-50%,-50%);}
-.info-section.info-graphs .graf3{top:70%; left:60%; transform:translate(-50%,-50%);}
-
-/* Gráfico de barras ao lado (agora no fluxo normal) */
-.info-section.info-graphs .big-chart{
-  width:160px; flex-shrink:0; z-index:1;
-  margin-bottom:10px;   /* ajusta alinhamento pela base */
-}
-
-/* Onda decorativa de fundo */
-.info-section.info-graphs .wave-decor.wave2{
-  position:absolute; bottom:-20px; left:-10%; width:140%; opacity:.4; z-index:0;
-}
-
-/* ========== WHY TRIAP SECTION ========== */
+/* ===================== WHY TRIAP ===================== */
 .why-triap-section{
   background:#f5f5f5; text-align:center; padding:3rem 10%;
 }
 .why-triap-section h2{font-size:2rem; color:#004D66; margin-bottom:2rem;}
-.features-cards{
-  display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:1rem; margin-top:2rem;
+.vantagens-img{
+  width:90%; max-width:1000px; display:block; margin:0 auto 3rem;
 }
-.features-cards .card{
-  background:#fff; border-radius:6px; padding:1rem;
-  box-shadow:0 0 4px rgba(0,0,0,0.1); text-align:center;
-}
-.features-cards .card h3{font-size:1.2rem; color:#0077CC; margin:.5rem 0;}
-.features-cards .card p{font-size:.95rem; color:#333; line-height:1.4;}
+@media(max-width:768px){ .vantagens-img{max-width:600px;} }
 
-/* ========== IDEAL SECTION ========== */
+/* ===================== IDEAL ===================== */
 .ideal-section{
-  background:#fff; text-align:center; padding:3rem 10%;
+  background:#fff; text-align:center; padding:2.5rem 10% 2rem;
 }
-.ideal-section h2{font-size:2rem; color:#004D66; margin-bottom:2rem;}
-.ideal-cards{display:flex; flex-wrap:wrap; gap:3rem; justify-content:center;}
+.ideal-section h2{
+  background:#1B1B1B; color:#fff; display:inline-block;
+  padding:.55rem 2.8rem; border-radius:8px; font-size:1.9rem;
+  margin-bottom:2.5rem; box-shadow:0 2px 6px rgba(0,0,0,.20);
+}
+.ideal-cards{display:flex; flex-wrap:wrap; gap:4.5rem; justify-content:center;}
 .ideal-card{width:200px;}
-.ideal-card img{width:80px; margin-bottom:10px;}
+.ideal-card img{
+  width:90px; height:90px; background:#C9DCE8; border-radius:50%;
+  padding:18px; object-fit:contain; margin-bottom:1.2rem; box-shadow:0 2px 6px rgba(0,0,0,.12);
+}
+.ideal-card h4{font-size:1.05rem; font-weight:700; margin-bottom:.4rem; color:#0E3F55;}
+.ideal-card p{
+  font-size:.9rem; line-height:1.45; max-width:200px; margin:0 auto; color:#444;
+}
+.wave-decor.wave1{display:none;}
 
-/* ========== RESULTS SECTION ========== */
+/* ===================== RESULTADOS ===================== */
 .results-section{
-  background:#f5f5f5; text-align:center; padding:3rem 10%;
+  background:linear-gradient(180deg,#E4F779 0%,#BCD65C 100%);
+  text-align:center; padding:5rem 8% 4rem; color:#fff;
 }
-.results-section h2{font-size:2rem; color:#004D66; margin-bottom:2rem;}
-.results-circles{
-  display:flex; flex-wrap:wrap; gap:3rem; justify-content:center;
+.results-section h2{
+  font-size:2.2rem; font-weight:700; margin-bottom:3rem;
+  text-shadow:0 2px 6px rgba(0,0,0,.25);
 }
-.results-circles .circle{
-  background:#fff; border-radius:50%; width:120px; height:120px;
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  box-shadow:0 0 4px rgba(0,0,0,0.1);
+.results-circles{display:flex; gap:3.5rem; justify-content:center; flex-wrap:wrap;}
+.result-item{display:flex; flex-direction:column; align-items:center;}
+.circle{
+  position:relative; width:190px; height:190px; border-radius:50%;
+  background:#0E3F55; box-shadow:0 2px 10px rgba(0,0,0,.15);
+  margin-bottom:1.2rem;
 }
-.results-circles .circle h3{font-size:1.5rem; color:#0077CC; margin:0;}
-.results-circles .circle p{font-size:.8rem; color:#333; margin:.3rem 0;}
+.circle::before{content:''; position:absolute; inset:28px; background:#fff; border-radius:50%;}
+.circle h3{
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  font-size:3rem; font-weight:700; color:#0E3F55; margin:0;
+}
+.explain{
+  width:200px; max-width:200px; text-align:center;
+  background:#0E3F55; color:#fff; border-radius:10px;
+  padding:1rem 1.2rem; font-size:.95rem; box-shadow:0 2px 8px rgba(0,0,0,.1);
+}
 
-/* ========== CTA SECTION ========== */
+/* ===================== CTA ===================== */
 .cta-section{
   background:#E6F9FF; text-align:center; padding:3rem 10%;
 }
-.cta-section .cta-button{
+.cta-button{
   padding:15px 30px; background:#0077CC; color:#fff;
   border:none; border-radius:6px; font-size:1rem; cursor:pointer;
 }
-.cta-section .cta-button:hover{background:#005FA3;}
+.cta-button:hover{background:#005FA3;}
 
-/* ========== RODAPÉ ========== */
+/* ===================== FOOTER ===================== */
 .landing-footer{
   background:#333; color:#fff; text-align:center; padding:2rem 10%;
 }
 .landing-footer p{margin:.3rem 0;}
-/* ===== Esconde os mini-gráficos circulares da Info Section ===== */
-.info-section.info-graphs .grafico {
-  display: none !important;
+
+/* ===================== RESPONSIVE ===================== */
+@media(max-width:1024px){
+  .results-circles{gap:2.2rem;}
+}
+@media(max-width:768px){
+  .hero-section,
+  .info-section.info-graphs{flex-direction:column; text-align:center; padding:2rem 5%;}
+  .hero-left, .hero-right,
+  .info-section.info-graphs .info-text,
+  .info-section.info-graphs .info-image{max-width:100%; width:100%; margin-bottom:2rem;}
+  .info-section.info-graphs .big-chart{display:none;}
+  .features-cards{grid-template-columns:1fr;}
+  .results-circles{flex-direction:column; gap:2.5rem;}
+  .ideal-cards{gap:3rem;}
 }
 
-
-/* ========== FONTE CUSTOM ========== */
+/* ===================== FONTE CUSTOM ===================== */
 @font-face{
   font-family:'SF Pro Display';
   src:url('./fonts/SFProDisplay-Regular.otf') format('opentype');
   font-weight:400; font-style:normal;
-}
-
-/* ========== RESPONSIVE ========== */
-@media (max-width:768px){
-  .hero-section,
-  .info-section.info-graphs{
-    flex-direction:column; text-align:center; padding:2rem 5%;
-  }
-  .hero-left,.hero-right,
-  .info-section.info-graphs .info-text,
-  .info-section.info-graphs .info-image{
-    max-width:100%; width:100%; margin-bottom:2rem;
-  }
-  .info-section.info-graphs .big-chart{display:none;}
-  .features-cards{grid-template-columns:1fr;}
-  .results-circles{flex-direction:column;}
 }
