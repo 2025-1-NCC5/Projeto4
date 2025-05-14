@@ -14,6 +14,7 @@ import LandingPage from './LandingPage'; // Pagina inicial publica
 import LoginPage from './LoginPage';     // Pagina de login publica
 import RegisterPage from './RegisterPage'; // Pagina de registro publica
 import DashboardPage from './DashboardPage'; // Pagina que queremos proteger
+import Viagens from './Viagens'; // Página das viagens do usuário
 
 // --- Componente Wrapper para Rotas Protegidas ---
 // Este componente verifica a autenticacao antes de renderizar suas rotas filhas
@@ -52,6 +53,7 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/viagens" element={<Viagens />} />
 
         {/* --- Definicao das Rotas Protegidas --- */}
         {/* Usamos uma Route que renderiza o componente ProtectedRoute.
