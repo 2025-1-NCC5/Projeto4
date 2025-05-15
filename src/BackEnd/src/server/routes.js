@@ -172,127 +172,106 @@ router.get('/user-profile', verifyToken, (req, res) => {
 // --- Endpoint de Simulação (Publico ou Protegido) ---
 // Para proteger, descomente verifyToken:
 // router.post('/simulate', verifyToken, async (req, res) => {
-  router.post('/simulate', async (req, res) => {
-    console.log("--- Rota /api/simulate iniciada ---");
-    try {
-      const { origin, destination, datetime } = req.body;
-      console.log("Dados recebidos:", { origin, destination, datetime });
-  
-      // Validacao de entrada
-      if (!origin || !destination || !datetime || !origin.lon || !origin.lat || !destination.lon || !destination.lat ) {
-         console.warn("WARN: Dados de entrada insuficientes/invalidos para /simulate.");
-         return res.status(400).json({ message: "Dados insuficientes ou invalidos (lat/lon)." });
-      }
-  
-      // 1. Chamada ORS
-      let distance_m = null;
-      let duration_s = null;
-      try {
-        console.log("INFO: Chamando API ORS publica...");
-        const orsApiKey = process.env.ORS_API_KEY;
-        if (!orsApiKey) throw new Error("Chave da API ORS nao configurada no servidor.");
-  
-        const orsResp = await axios.post(
-          "https://api.openrouteservice.org/v2/directions/driving-car",
-          { coordinates: [[Number(origin.lon), Number(origin.lat)], [Number(destination.lon), Number(destination.lat)]] },
-          { headers: { Authorization: orsApiKey }, timeout: 15000 } // Timeout aumentado
-        );
-  
-        if (orsResp.data?.routes?.[0]?.summary) { // Checagem mais segura
-           distance_m = orsResp.data.routes[0].summary.distance;
-           duration_s = orsResp.data.routes[0].summary.duration;
-           if (typeof distance_m !== 'number' || typeof duration_s !== 'number') {
-               throw new Error("Valores invalidos (dist/dur) da API ORS.");
-           }
-           console.log("INFO: Resposta ORS OK:", { distance_m, duration_s });
-        } else { throw new Error("Resposta inesperada da API ORS."); }
-  
-      } catch (orsError) {
-         console.error("!!! ERRO API ORS !!!");
-         if (orsError.response) {
-           console.error(" Status ORS:", orsError.response.status, "Data:", JSON.stringify(orsError.response.data));
-         } else { console.error(" Erro ORS:", orsError.message); }
-         // Retorna erro especifico
-         return res.status(500).json({ message: `Erro ao obter dados de rota (ORS): ${orsError.response?.data?.error?.message || orsError.message}` });
-      }
-  
-      // 2. Features de data/hora/feriado
-      console.log("INFO: Calculando features...");
-      const dt = new Date(datetime);
-      const hour_val = dt.getHours() + dt.getMinutes() / 60.0;
-      const weekday_val = dt.getDay() === 0 ? 7 : dt.getDay();
-      const day = dt.getDate();
-      const month = dt.getMonth() + 1;
-      const year = dt.getFullYear();
-      const hour_sin = Math.sin(2 * Math.PI * hour_val / 24);
-      const hour_cos = Math.cos(2 * Math.PI * hour_val / 24);
-      const weekday_sin = Math.sin(2 * Math.PI * weekday_val / 7);
-      const weekday_cos = Math.cos(2 * Math.PI * weekday_val / 7);
-      const is_holiday = await isHoliday(dt);
-      console.log(`INFO: Data: ${dt.toISOString().split('T')[0]}, Feriado: ${is_holiday}`);
-  
-      // 3. Monta payload para Python/ML
-      const mlPayload = {
-        hour_min: hour_val, hour_sin, hour_cos, weekday_val, weekday_sin,
-        weekday_cos, is_holiday, distancia_m: distance_m,
-        tempo_estim_segundos: duration_s, day, month, year
-      };
-      console.log("DEBUG: Payload para ML:", JSON.stringify(mlPayload));
-  
-      // Validacao do payload
-      if (Object.values(mlPayload).some(v => v == null || (typeof v === 'number' && isNaN(v)))) {
-          console.error("ERRO: Payload ML invalido:", mlPayload);
-          throw new Error("Dados invalidos para o modelo de ML.");
-      }
-  
-      // 4. Chama microservico Python
-      let price;
-      const mlServiceUrl = process.env.ML_SERVICE_URL;
-      if (!mlServiceUrl) throw new Error("URL do servico de ML nao configurada.");
-  
-      try {
-        console.log(`INFO: Chamando Python ML: ${mlServiceUrl}/predict`);
-        const mlResp = await axios.post(`${mlServiceUrl}/predict`, mlPayload, { timeout: 30000 }); // Timeout maior
-  
-        if (mlResp.data && typeof mlResp.data.price === 'number' && isFinite(mlResp.data.price)) {
-             price = mlResp.data.price;
-             console.log("INFO: Resposta ML OK:", { price });
-        } else {
-             console.error("ERRO: Resposta invalida ML:", mlResp.data);
-             throw new Error("Preco invalido do modelo ML.");
-        }
-      } catch (mlError) {
-         console.error("!!! ERRO Python ML !!!");
-         if (mlError.response) {
-           console.error(" Status ML:", mlError.response.status, "Data:", JSON.stringify(mlError.response.data));
-         } else { console.error(" Erro ML:", mlError.message); }
-         // Retorna erro especifico
-         return res.status(500).json({ message: `Erro ao calcular preco (ML): ${mlError.response?.data?.detail || mlError.message}` });
-      }
-  
-      console.log("--- Rota /api/simulate concluida ---");
-      // Converte distância em km (1 casa decimal)
-      const distancia_km = Math.round((distance_m / 1000) * 10) / 10;
+router.post('/simulate', async (req, res) => {
+  console.log("--- Rota /api/simulate iniciada ---");
+  try {
+    const { origin, destination /*, datetime */ } = req.body; // datetime do payload não é mais usado para o ML
+    console.log("Dados recebidos do frontend:", { origin, destination });
 
-      // Converte tempo estimado em string legível
-      let duracao_str = '';
-      const minutos = Math.round(duration_s / 60);
-      if (minutos < 60) {
-        duracao_str = `${minutos} min`;
-      } else {
-        const h = Math.floor(minutos / 60);
-        const m = minutos % 60;
-        duracao_str = `${h}h${m.toString().padStart(2, '0')}`;
-      }
-
-      return res.json({ price, distancia_km, duracao_str });
-  
-    } catch (err) {
-      // Captura erros gerais lancados nos blocos try
-      console.error("!!! ERRO GERAL /api/simulate:", err.message);
-      return res.status(500).json({ message: err.message || 'Erro interno do servidor.' });
+    if (!origin || !destination || !origin.lon || !origin.lat || !destination.lon || !destination.lat) {
+      console.warn("WARN: Dados de entrada insuficientes/invalidos para /simulate.");
+      return res.status(400).json({ message: "Coordenadas de origem e destino são obrigatórias." });
     }
-  });
+
+    // 1. Chamada ORS para distância e duração
+    let distance_m = null;
+    let duration_s = null;
+    try {
+      console.log("INFO: Chamando API ORS...");
+      const orsApiKey = process.env.ORS_API_KEY; // Certifique-se que está no .env
+      if (!orsApiKey) throw new Error("Chave da API ORS não configurada.");
+
+      const orsResp = await axios.post(
+        "https://api.openrouteservice.org/v2/directions/driving-car",
+        { coordinates: [[Number(origin.lon), Number(origin.lat)], [Number(destination.lon), Number(destination.lat)]] },
+        { headers: { Authorization: orsApiKey }, timeout: 15000 }
+      );
+
+      if (orsResp.data?.routes?.[0]?.summary) {
+        distance_m = orsResp.data.routes[0].summary.distance;
+        duration_s = orsResp.data.routes[0].summary.duration;
+        if (typeof distance_m !== 'number' || typeof duration_s !== 'number') {
+          throw new Error("Valores inválidos (distância/duração) da API ORS.");
+        }
+        console.log("INFO: Resposta ORS OK:", { distance_m, duration_s });
+      } else {
+        throw new Error("Resposta inesperada ou sem rota da API ORS.");
+      }
+    } catch (orsError) {
+      console.error("!!! ERRO API ORS !!!");
+      const orsErrorMessage = orsError.response?.data?.error?.message || orsError.response?.data?.message || orsError.message;
+      console.error(" Detalhe ORS:", orsError.response ? JSON.stringify(orsError.response.data) : orsErrorMessage);
+      return res.status(500).json({ message: `Erro ao obter dados de rota (ORS): ${orsErrorMessage}` });
+    }
+
+    // 2. Monta payload para Python/ML (APENAS distância e duração)
+    // O Python agora gera todas as outras features de data/hora/contexto
+    const mlPayload = {
+      distancia_m: distance_m,
+      tempo_estim_segundos: duration_s
+    };
+    console.log("DEBUG: Payload para ML (Python):", JSON.stringify(mlPayload));
+
+    // 3. Chama microserviço Python
+    let predictedPrices; // Agora espera um objeto com múltiplos preços
+    const mlServiceUrl = process.env.ML_SERVICE_URL; // Certifique-se que está no .env
+    if (!mlServiceUrl) throw new Error("URL do serviço de ML não configurada.");
+
+    try {
+      console.log(`INFO: Chamando Python ML: ${mlServiceUrl}/predict`);
+      const mlResp = await axios.post(`${mlServiceUrl}/predict`, mlPayload, { timeout: 30000 });
+
+      // A resposta do Python agora é um objeto com chaves de categoria
+      // Ex: { "uberX": 25.50, "uberComfort": 30.00, ... }
+      if (mlResp.data && typeof mlResp.data === 'object' && Object.keys(mlResp.data).length > 0) {
+        predictedPrices = mlResp.data;
+        console.log("INFO: Resposta ML OK (múltiplos preços):", predictedPrices);
+      } else {
+        console.error("ERRO: Resposta inválida do serviço ML:", mlResp.data);
+        throw new Error("Resposta de preços inválida do modelo ML.");
+      }
+    } catch (mlError) {
+      console.error("!!! ERRO Python ML !!!");
+      const mlErrorMessage = mlError.response?.data?.detail || mlError.response?.data?.message || mlError.message;
+      console.error(" Detalhe ML:", mlError.response ? JSON.stringify(mlError.response.data) : mlErrorMessage);
+      return res.status(500).json({ message: `Erro ao calcular preços (ML): ${mlErrorMessage}` });
+    }
+
+    // Formatar distância e duração para exibição (como antes)
+    const distancia_km = Math.round((distance_m / 1000) * 10) / 10;
+    let duracao_str = '';
+    const minutos = Math.round(duration_s / 60);
+    if (minutos < 60) {
+      duracao_str = `${minutos} min`;
+    } else {
+      const h = Math.floor(minutos / 60);
+      const m = minutos % 60;
+      duracao_str = `${h}h${m.toString().padStart(2, '0')}`;
+    }
+
+    console.log("--- Rota /api/simulate concluida com sucesso ---");
+    // Retorna o objeto `predictedPrices` junto com `distancia_km` e `duracao_str`
+    return res.json({ 
+        prices: predictedPrices, // Objeto com os preços por categoria
+        distancia_km, 
+        duracao_str 
+    });
+
+  } catch (err) {
+    console.error("!!! ERRO GERAL /api/simulate:", err.stack || err.message);
+    return res.status(500).json({ message: err.message || 'Erro interno do servidor ao simular rota.' });
+  }
+});
 
 // Rota Ping (para teste de conectividade basica)
 router.get('/ping', (_req, res) => {

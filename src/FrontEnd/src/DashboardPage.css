@@ -151,3 +151,177 @@
     padding: 0.85rem;
   }
 }
+
+/* DashboardPage.css ou seu arquivo CSS principal */
+
+/* ... (seu CSS existente) ... */
+
+.dashboard-container h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 25px;
+}
+
+.inputs-grid {
+  display: grid;
+  grid-template-columns: 1fr; /* Uma coluna por padrão */
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+@media (min-width: 768px) { /* Duas colunas em telas maiores */
+  .inputs-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .form-group.full-width {
+    grid-column: 1 / -1; /* Ocupa toda a largura */
+  }
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #555;
+}
+
+.form-group input[type="text"], 
+.form-group input[type="datetime-local"],
+.AddressAutocompleteOSM input /* Se o componente de autocomplete renderizar um input */ {
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  box-sizing: border-box; /* Importante para padding não aumentar o tamanho total */
+}
+
+.form-group small {
+  font-size: 0.85rem;
+  color: #777;
+  margin-top: 5px;
+}
+
+.simulate-btn {
+  background-color: #b3d62b; /* Um verde azulado, ajuste conforme seu tema */
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: block;
+  width: 100%;
+  margin-bottom: 25px;
+}
+
+.simulate-btn:hover {
+  background-color: #5eaaa8;
+}
+
+.simulate-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Caixas de Resultado - Estilo "Verde" */
+.result-box, .price-result-card, .summary-box {
+  background-color: #e6ffed; /* Verde claro */
+  border: 1px solid #b7e4c7; /* Borda verde um pouco mais escura */
+  color: #1d3557; /* Cor de texto escura para contraste */
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.error-box {
+  background-color: #ffebee; /* Rosa claro para erros */
+  border-color: #ef9a9a;
+  color: #c62828; /* Texto vermelho escuro */
+}
+
+.error-box p {
+  margin: 0;
+  font-weight: bold;
+}
+
+
+.summary-box strong {
+  color: #007f5f; /* Verde escuro para destaques no sumário */
+}
+.best-price-highlight {
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-top: 10px;
+}
+.best-price-highlight strong {
+    color: #d00000; /* Destaque para o melhor preço */
+}
+
+
+.price-cards-container {
+  display: grid;
+  grid-template-columns: 1fr; /* Uma coluna por padrão */
+  gap: 20px;
+  margin-top: 10px;
+}
+
+@media (min-width: 992px) { /* Duas colunas para as caixas de preço em telas maiores */
+  .price-cards-container {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+
+.price-result-card .price-card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed #a9d8b8;
+}
+
+.app-logo {
+  width: 40px; /* Ajuste o tamanho conforme necessário */
+  height: 40px;
+  margin-right: 15px;
+  object-fit: contain;
+}
+
+.price-result-card h3 {
+  margin: 0;
+  color: #023047; /* Azul escuro para o título */
+  font-size: 1.3rem;
+}
+
+.price-list .price-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 1rem;
+}
+.price-list .price-item:not(:last-child) {
+    border-bottom: 1px solid #f2fbe0;
+}
+
+
+.price-item-category {
+  font-weight: 500;
+  color: #4a4a4a;
+}
+
+.price-item-value {
+  font-weight: bold;
+  color: #005f73; /* Azul petróleo para o valor */
+}
+
+/* Estilos para os inputs de autocomplete (pode precisar ajustar baseado no componente) */
+.AddressAutocompleteOSM {
+  width: 100%;
+}

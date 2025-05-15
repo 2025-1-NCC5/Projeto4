@@ -21,7 +21,7 @@ Este projeto é um estimador de preços para serviços de transporte, como Uber,
 
 ## Ambiente de dev
 
-### Configurar e rodar FrontEnd
+### 1. Configurar e rodar FrontEnd
 
 ```sh
 cd src/FrontEnd
@@ -29,7 +29,7 @@ npm install
 npm run dev
 ```
 
-### Configurar e rodar Servidor
+### 2. Configurar e rodar Servidor
 
 ```sh
 cd src/BackEnd
@@ -37,7 +37,7 @@ npm install
 npm run dev
 ```
 
-### Configurar e rodar modelo de IA
+### 3. Configurar e rodar modelo de IA
 
 ```sh
 cd src/BackEnd/src/python
@@ -45,7 +45,11 @@ pip install fastapi uvicorn pydantic numpy scikit-learn
 python -m uvicorn main:app --host 0.0.0.0 --port 5000 --reload
 ```
 
----
+Além disso, é necessário fazer o download dos modelos de IA, que estão disponíveis no [Google Drive](https://drive.google.com/file/d/16lhmyuqmGNP3n_KUpem4iaeZNBg5oCkw/view?usp=drive_link)
+
+Após o download, arraste o arquivo para a pastas `src/BackEnd/src/python/modelos_final/` e descompacte-o.
+
+### 4. Acessar o frontend
 
 Acessar o FrontEnd via [localhost](http://localhost:5173/)
 
