@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Relatório de Feedback</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+            background-color: #f2f2f2;
+        }
+        .report {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            max-width: 600px;
+            margin: auto;
+            box-shadow: 0 0 10px #ccc;
+        }
+        h2 {
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="report">
+    <h2>Relatório de Feedback para {{ result.name }}</h2>
+    <p><strong>Média geral:</strong> {{ result.average }}</p>
+    <p><strong>Resumo:</strong> {{ result.level }}</p>
+
+    <h3>Notas Individuais:</h3>
+    <ul>
+        {% for skill, score in result.scores.items() %}
+            <li>{{ skill.capitalize() }}: {{ score }}</li>
+        {% endfor %}
+    </ul>
+
+    <h3>Comentários:</h3>
+    <p>{{ result.comments or 'Nenhum comentário fornecido.' }}</p>
+
+    <br>
+    <a href="/">Enviar novo feedback</a>
+</div>
+
+</body>
+</html>

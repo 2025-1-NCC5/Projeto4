@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Feedback 360°</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+            background-color: #f5f5f5;
+        }
+        form {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #ccc;
+            width: 100%;
+            max-width: 500px;
+            margin: auto;
+        }
+        h2 {
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+        }
+        input[type="text"], select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+        input[type="submit"] {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<form method="POST" action="/submit">
+    <h2>Feedback 360°</h2>
+
+    <label for="evaluator">Quem está avaliando:</label>
+    <input type="text" id="evaluator" name="evaluator" required>
+
+    <label for="evaluated">Quem está sendo avaliado:</label>
+    <input type="text" id="evaluated" name="evaluated" required>
+
+    <label for="communication">Comunicação (1 a 5):</label>
+    <select name="communication" required>
+        <option value="">Escolha</option>
+        <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+    </select>
+
+    <label for="leadership">Liderança (1 a 5):</label>
+    <select name="leadership" required>
+        <option value="">Escolha</option>
+        <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+    </select>
+
+    <label for="empathy">Empatia (1 a 5):</label>
+    <select name="empathy" required>
+        <option value="">Escolha</option>
+        <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+    </select>
+
+    <label for="teamwork">Trabalho em Equipe (1 a 5):</label>
+    <select name="teamwork" required>
+        <option value="">Escolha</option>
+        <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+    </select>
+
+    <label for="comments">Comentários adicionais:</label>
+    <textarea name="comments" rows="4" placeholder="Escreva aqui..."></textarea>
+
+    <input type="submit" value="Enviar Feedback">
+</form>
+
+</body>
+</html>
