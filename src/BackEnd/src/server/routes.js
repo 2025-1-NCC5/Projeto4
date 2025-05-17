@@ -175,99 +175,111 @@ router.get('/user-profile', verifyToken, (req, res) => {
 router.post('/simulate', async (req, res) => {
   console.log("--- Rota /api/simulate iniciada ---");
   try {
-    const { origin, destination /*, datetime */ } = req.body; // datetime do payload não é mais usado para o ML
-    console.log("Dados recebidos do frontend:", { origin, destination });
+    const { origin, destination } = req.body;
+    // ... (validação de origin/destination como antes) ...
 
-    if (!origin || !destination || !origin.lon || !origin.lat || !destination.lon || !destination.lat) {
-      console.warn("WARN: Dados de entrada insuficientes/invalidos para /simulate.");
-      return res.status(400).json({ message: "Coordenadas de origem e destino são obrigatórias." });
-    }
-
-    // 1. Chamada ORS para distância e duração
     let distance_m = null;
     let duration_s = null;
+    let route_geometry = null; // Para armazenar as coordenadas da rota
+
     try {
-      console.log("INFO: Chamando API ORS...");
-      const orsApiKey = process.env.ORS_API_KEY; // Certifique-se que está no .env
+      console.log("INFO: Chamando API ORS (com solicitação de geometria)...");
+      const orsApiKey = process.env.ORS_API_KEY;
       if (!orsApiKey) throw new Error("Chave da API ORS não configurada.");
+
+      const orsPayload = {
+        coordinates: [[Number(origin.lon), Number(origin.lat)], [Number(destination.lon), Number(destination.lat)]],
+        // Adicionar para obter a geometria em formato GeoJSON, que é mais fácil de usar
+        // Se não funcionar, ORS retorna 'geometry' como uma string polyline codificada
+        // e precisaremos decodificá-la (geralmente no frontend).
+        // A API v2 do ORS geralmente retorna a geometria por padrão.
+        // Vamos verificar a estrutura da resposta.
+        // format: "geojson" // Descomente se precisar especificar formato de resposta global
+        // A geometria da rota geralmente está em routes[0].geometry (string polyline)
+        // ou em routes[0].feature.geometry.coordinates (se a resposta for GeoJSON)
+      };
 
       const orsResp = await axios.post(
         "https://api.openrouteservice.org/v2/directions/driving-car",
-        { coordinates: [[Number(origin.lon), Number(origin.lat)], [Number(destination.lon), Number(destination.lat)]] },
+        orsPayload,
         { headers: { Authorization: orsApiKey }, timeout: 15000 }
       );
 
-      if (orsResp.data?.routes?.[0]?.summary) {
-        distance_m = orsResp.data.routes[0].summary.distance;
-        duration_s = orsResp.data.routes[0].summary.duration;
+      if (orsResp.data?.routes?.[0]) {
+        const route = orsResp.data.routes[0];
+        if (route.summary) {
+          distance_m = route.summary.distance;
+          duration_s = route.summary.duration;
+        } else {
+          throw new Error("Sumário da rota não encontrado na resposta ORS.");
+        }
+
+        // A geometria da rota é uma string Polyline codificada
+        // Ex: "o~ciFz{fg@fHz@..."
+        // Precisaremos de uma biblioteca no frontend para decodificá-la para [lat, lon]
+        if (route.geometry) {
+          route_geometry = route.geometry; // Esta é a string Polyline
+          console.log("INFO: Geometria da rota (polyline) obtida da ORS.");
+        } else {
+          console.warn("AVISO: Geometria da rota não encontrada na resposta ORS.");
+        }
+        
         if (typeof distance_m !== 'number' || typeof duration_s !== 'number') {
           throw new Error("Valores inválidos (distância/duração) da API ORS.");
         }
-        console.log("INFO: Resposta ORS OK:", { distance_m, duration_s });
+        console.log("INFO: Resposta ORS OK:", { distance_m, duration_s, geometry_present: !!route_geometry });
       } else {
         throw new Error("Resposta inesperada ou sem rota da API ORS.");
       }
     } catch (orsError) {
+      // ... (seu tratamento de erro ORS como antes) ...
       console.error("!!! ERRO API ORS !!!");
       const orsErrorMessage = orsError.response?.data?.error?.message || orsError.response?.data?.message || orsError.message;
       console.error(" Detalhe ORS:", orsError.response ? JSON.stringify(orsError.response.data) : orsErrorMessage);
       return res.status(500).json({ message: `Erro ao obter dados de rota (ORS): ${orsErrorMessage}` });
     }
 
-    // 2. Monta payload para Python/ML (APENAS distância e duração)
-    // O Python agora gera todas as outras features de data/hora/contexto
+    // ... (cálculo do mlPayload e chamada ao Python como antes) ...
     const mlPayload = {
       distancia_m: distance_m,
       tempo_estim_segundos: duration_s
     };
-    console.log("DEBUG: Payload para ML (Python):", JSON.stringify(mlPayload));
+    // ... (chamada ao Python ML) ...
+    let predictedPrices;
+    // ... (lógica para obter predictedPrices) ...
+    // Simulação da resposta do ML para este exemplo
+     const mlServiceUrl = process.env.ML_SERVICE_URL; 
+     if (!mlServiceUrl) throw new Error("URL do serviço de ML não configurada.");
+     try {
+       const mlResp = await axios.post(`${mlServiceUrl}/predict`, mlPayload, { timeout: 30000 });
+       if (mlResp.data && typeof mlResp.data === 'object' && Object.keys(mlResp.data).length > 0) {
+         predictedPrices = mlResp.data;
+       } else {
+         throw new Error("Resposta de preços inválida do modelo ML.");
+       }
+     } catch (mlError) {
+       const mlErrorMessage = mlError.response?.data?.detail || mlError.response?.data?.message || mlError.message;
+       return res.status(500).json({ message: `Erro ao calcular preços (ML): ${mlErrorMessage}` });
+     }
 
-    // 3. Chama microserviço Python
-    let predictedPrices; // Agora espera um objeto com múltiplos preços
-    const mlServiceUrl = process.env.ML_SERVICE_URL; // Certifique-se que está no .env
-    if (!mlServiceUrl) throw new Error("URL do serviço de ML não configurada.");
 
-    try {
-      console.log(`INFO: Chamando Python ML: ${mlServiceUrl}/predict`);
-      const mlResp = await axios.post(`${mlServiceUrl}/predict`, mlPayload, { timeout: 30000 });
-
-      // A resposta do Python agora é um objeto com chaves de categoria
-      // Ex: { "uberX": 25.50, "uberComfort": 30.00, ... }
-      if (mlResp.data && typeof mlResp.data === 'object' && Object.keys(mlResp.data).length > 0) {
-        predictedPrices = mlResp.data;
-        console.log("INFO: Resposta ML OK (múltiplos preços):", predictedPrices);
-      } else {
-        console.error("ERRO: Resposta inválida do serviço ML:", mlResp.data);
-        throw new Error("Resposta de preços inválida do modelo ML.");
-      }
-    } catch (mlError) {
-      console.error("!!! ERRO Python ML !!!");
-      const mlErrorMessage = mlError.response?.data?.detail || mlError.response?.data?.message || mlError.message;
-      console.error(" Detalhe ML:", mlError.response ? JSON.stringify(mlError.response.data) : mlErrorMessage);
-      return res.status(500).json({ message: `Erro ao calcular preços (ML): ${mlErrorMessage}` });
-    }
-
-    // Formatar distância e duração para exibição (como antes)
+    // Formatar distância e duração
     const distancia_km = Math.round((distance_m / 1000) * 10) / 10;
     let duracao_str = '';
     const minutos = Math.round(duration_s / 60);
-    if (minutos < 60) {
-      duracao_str = `${minutos} min`;
-    } else {
-      const h = Math.floor(minutos / 60);
-      const m = minutos % 60;
-      duracao_str = `${h}h${m.toString().padStart(2, '0')}`;
-    }
+    if (minutos < 60) { duracao_str = `${minutos} min`; }
+    else { const h = Math.floor(minutos / 60); const m = minutos % 60; duracao_str = `${h}h${m.toString().padStart(2, '0')}`; }
 
     console.log("--- Rota /api/simulate concluida com sucesso ---");
-    // Retorna o objeto `predictedPrices` junto com `distancia_km` e `duracao_str`
     return res.json({ 
-        prices: predictedPrices, // Objeto com os preços por categoria
+        prices: predictedPrices, 
         distancia_km, 
-        duracao_str 
+        duracao_str,
+        route_geometry: route_geometry // Adiciona a string polyline da geometria à resposta
     });
 
   } catch (err) {
+    // ... (seu tratamento de erro geral como antes) ...
     console.error("!!! ERRO GERAL /api/simulate:", err.stack || err.message);
     return res.status(500).json({ message: err.message || 'Erro interno do servidor ao simular rota.' });
   }

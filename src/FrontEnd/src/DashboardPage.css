@@ -325,3 +325,37 @@
 .AddressAutocompleteOSM {
   width: 100%;
 }
+
+/* ... (seu CSS existente do DashboardPage.css) ... */
+
+.map-display-box {
+  background-color: #f9f9f9; /* Um fundo levemente diferente para a caixa do mapa */
+  border: 1px solid #e0e0e0;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 25px; /* Espaçamento acima do mapa */
+  margin-bottom: 25px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.map-display-box h3 {
+  text-align: center;
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+}
+
+/* Mensagem de placeholder para o mapa */
+.map-placeholder-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px; /* Altura similar ao mapa */
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  color: #777;
+  font-style: italic;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}

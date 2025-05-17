@@ -11,10 +11,13 @@
   },
   "proxy": "http://localhost:3000",
   "dependencies": {
+    "@mapbox/polyline": "^1.2.1",
     "framer-motion": "^12.11.3",
+    "leaflet": "^1.9.4",
     "lottie-react": "^2.4.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-leaflet": "^5.0.0",
     "react-router-dom": "^7.5.0"
   },
   "devDependencies": {
