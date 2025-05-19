@@ -1,4 +1,4 @@
-# Usar uma imagem base oficial do Python (escolha uma versão compatível com seus modelos)
+# Usar uma imagem base oficial do Python
 FROM python:3.9-slim
 
 # Definir o diretório de trabalho no container
